@@ -15,6 +15,7 @@ specifiers:
   '@types/supertest': ^2.0.11
   '@typescript-eslint/eslint-plugin': ^5.0.0
   '@typescript-eslint/parser': ^5.0.0
+  date-and-time: ^3.0.1
   eslint: ^8.0.1
   eslint-config-prettier: ^8.3.0
   eslint-plugin-prettier: ^4.0.0
@@ -38,6 +39,7 @@ dependencies:
   '@nestjs/platform-express': 9.4.3_vw2vky2jc6gkm6gj7lzrgmojyi
   '@nestjs/swagger': 6.3.0_rjmpvsq4jzhua44mzzdoty2seu
   '@prisma/client': 4.15.0_prisma@4.15.0
+  date-and-time: 3.0.1
   reflect-metadata: 0.1.13
   rxjs: 7.8.1
   swagger-ui-express: 4.6.3
@@ -2136,6 +2138,10 @@ packages:
       shebang-command: 2.0.0
       which: 2.0.2
     dev: true
+
+  /date-and-time/3.0.1:
+    resolution: {integrity: sha512-Az1hy3IPuh7LR4duPGlgkUzZXtjoWH8pd+XVLpLXMNd+DD48sRdcsWIPbqdHCXg4izb9lPzrKtqUXPXevS9g4Q==}
+    dev: false
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
