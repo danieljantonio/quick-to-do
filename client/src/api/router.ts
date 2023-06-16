@@ -34,7 +34,6 @@ export const getTodosToday = async () => {
 };
 
 export const getTodos = async (query?: TodoQuery) => {
-	const url = new URL('http://localhost:5000/todos');
 	return axios.get<Todo[]>(
 		`http://localhost:5000/todos?${
 			query ? new URLSearchParams(query).toString() : ''
@@ -52,4 +51,12 @@ export const updateTodoStatus = async (data: {
 		{ isDone: data.isDone },
 		config,
 	);
+};
+
+export const postTodo = async (data: {
+	description: string;
+	dueAt: string;
+	categoryId?: string;
+}) => {
+	return axios.post<Todo>('http://localhost:5000/todos', data, config);
 };

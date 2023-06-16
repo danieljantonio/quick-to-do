@@ -1,24 +1,44 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import React from 'react';
-import { FieldValues, useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
+import { useMutation, useQuery } from 'react-query';
+import { getCategories, postTodo } from '~/api/router';
+import date from 'date-and-time';
 
-type FormValues =
-	| {
-			title: string;
-			categoryId?: string;
-			dueAt: Date;
-	  }
-	| FieldValues;
+type FormValues = {
+	description: string;
+	categoryId?: string;
+	dueAt: string;
+};
 
 const NewTodo: NextPage = () => {
+	const router = useRouter();
+
+	const { isLoading: catIsLoading, data: catData } = useQuery({
+		queryKey: ['categories'],
+		queryFn: getCategories,
+	});
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm();
+	} = useForm<FormValues>();
 
-	const onSubmit = (data: FormValues) => console.log(data);
+	const createTodo = useMutation({
+		mutationKey: ['create-todo'],
+		mutationFn: postTodo,
+		onSuccess: ({ data }) => {
+			if (date.isSameDay(new Date(), new Date(data.dueAt)))
+				router.push('/');
+			else router.push('/todos');
+		},
+	});
+
+	const onSubmit = (data: FormValues) => {
+		createTodo.mutate(data);
+	};
 
 	return (
 		<>
@@ -43,9 +63,9 @@ const NewTodo: NextPage = () => {
 							type="text"
 							placeholder="Type here"
 							className="input input-bordered w-full"
-							{...register('title', { required: true })}
+							{...register('description', { required: true })}
 						/>
-						{errors?.title && (
+						{errors?.description && (
 							<label className="label">
 								<span className="label-text-alt text-red-500">
 									Please enter the task description
@@ -57,13 +77,23 @@ const NewTodo: NextPage = () => {
 						<label className="label">
 							<span className="label-text">Select Category</span>
 						</label>
-						<select
-							className="select select-bordered w-full text-gray-400"
-							{...register('category')}>
-							<option value="Personal">Personal</option>
-							<option value="Work">Work</option>
-							<option value="Family">Family</option>
-						</select>
+						{catIsLoading ? (
+							<select className="select select-bordered w-full text-gray-400 disabled"></select>
+						) : (
+							<select
+								className="select select-bordered w-full text-gray-400"
+								{...register('categoryId')}>
+								{catData?.data.map((category) => {
+									return (
+										<option
+											key={category.id}
+											value={category.id}>
+											{category.name}
+										</option>
+									);
+								})}
+							</select>
+						)}
 					</div>
 					<div className="form-control w-full">
 						<label className="label">
