@@ -21,7 +21,7 @@ export class AuthService {
 		return {
 			accessToken: this.jwtService.sign(
 				{ userId: user.id },
-				{ expiresIn: '1h' },
+				{ expiresIn: '6h' },
 			),
 		};
 	}
