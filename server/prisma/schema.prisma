@@ -11,22 +11,23 @@ datasource db {
 }
 
 model User {
-  id   String   @id @default(cuid())
-  username String @unique
-  name String
-  role UserRole @default(USER)
-  todo Todo[]
+  id       String   @id @default(cuid())
+  username String   @unique
+  name     String
+  role     UserRole @default(USER)
+  todo     Todo[]
 }
 
 model Todo {
-  id         String    @id @default(cuid())
-  title      String    @unique
-  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  categoryId String?
-  createdAt  DateTime  @default(now())
-  dueAt      DateTime
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String
+  id          String    @id @default(cuid())
+  description String
+  dueAt       DateTime
+  createdAt   DateTime  @default(now())
+  isDone      Boolean   @default(false)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId  String?
 }
 
 model Category {
