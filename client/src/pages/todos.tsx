@@ -13,6 +13,7 @@ const Todos: NextPage = () => {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main className="flex flex-col items-center justify-center h-full">
+				<p className="w-3/5 text-3xl">All Tasks</p>
 				<div className="w-full">
 					<div className="divider w-3/5 mx-auto">
 						Due Today - {date.format(today, 'D MMM')}
