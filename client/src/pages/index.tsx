@@ -1,14 +1,14 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useQuery } from 'react-query';
-import { getTodos } from '~/api/router';
+import { getTodosToday } from '~/api/router';
 import TodoItem from '~/components/todo-item';
 import { Todo } from '~/types';
 
 const Home: NextPage = () => {
 	const { isLoading, data } = useQuery({
 		queryKey: ['todos'],
-		queryFn: getTodos,
+		queryFn: getTodosToday,
 		refetchOnWindowFocus: false,
 	});
 

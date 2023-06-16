@@ -15,8 +15,27 @@ const config = {
 	},
 };
 
+const setDateStart = (date: Date) => {
+	date.setHours(0, 0, 0, 0);
+	return date.toUTCString();
+};
+
+const setDateEnd = (date: Date) => {
+	date.setHours(23, 59, 59, 999);
+	return date.toUTCString();
+};
+
 export const getCategories = async () => {
 	return axios.get<Category[]>('http://localhost:5000/categories');
+};
+
+export const getTodosToday = async () => {
+	return axios.get<Todo[]>(
+		`http://localhost:5000/todos?dateStart=${setDateStart(
+			new Date(),
+		)}&dateEnd=${setDateEnd(new Date())}`,
+		config,
+	);
 };
 
 export const getTodos = async () => {
