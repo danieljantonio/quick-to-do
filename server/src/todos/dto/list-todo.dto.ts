@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateTodoDto {
+export class FindTodoDto {
 	@ApiProperty({ required: false })
-	categoryId?: string;
+	dateStart?: string
+	
+	@ApiProperty({ required: false })
+	dateEnd?: string
+	
+	@ApiProperty({ required: false })
+	sortDesc?: boolean
 }

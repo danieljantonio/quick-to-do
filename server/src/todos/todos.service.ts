@@ -1,15 +1,11 @@
-import {
-	BadRequestException,
-	Injectable,
-	NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { CreateTodoDto } from './dto/create-todo.dto';
+import { FindTodoDto } from './dto/list-todo.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ReqUser } from 'src/users/users.service';
 import { Request } from 'express';
 import { UpdateTodoDto } from './dto/update-todo.dto';
-import date from 'date-and-time';
 
 @Injectable()
 export class TodosService {
@@ -26,35 +22,22 @@ export class TodosService {
 		});
 	}
 
-	findAll(req: Request) {
+	findAll(req: Request, query: FindTodoDto) {
 		const _user = req.user as ReqUser;
 		if (!_user) throw new BadRequestException(`No user found`);
 
-		console.log({
-			where: { userId: _user.id },
-			orderBy: {
-				dueAt: 'asc',
-			},
-			include: { category: true },
-		});
-
-		return this.prisma.todo.findMany({
-			where: { userId: _user.id },
-			orderBy: {
-				dueAt: 'asc',
-			},
-			include: { category: true },
-		});
-	}
-
-	findAllToday() {
 		return this.prisma.todo.findMany({
 			where: {
+				userId: _user.id,
 				dueAt: {
-					gte: date.format(new Date(), 'YYYY-MM-DD'),
-					lt: date.format(date.addDays(new Date(), 1), 'YYYY-MM-DD'),
+					gte: new Date(query.dateStart) || undefined,
+					lte: new Date(query.dateEnd) || undefined,
 				},
 			},
+			orderBy: {
+				dueAt: query.sortDesc ? 'desc' : 'asc',
+			},
+			include: { category: true },
 		});
 	}
 
