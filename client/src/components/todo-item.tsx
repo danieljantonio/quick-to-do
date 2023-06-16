@@ -13,7 +13,10 @@ const TodoItem: FC<Todo> = ({ id, description, isDone, dueAt, category }) => {
 		mutationFn: updateTodoStatus,
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: ['todos', 'todos-today'],
+				queryKey: ['todos'],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ['todos-today'],
 			});
 		},
 	});
