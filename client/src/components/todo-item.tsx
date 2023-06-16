@@ -1,23 +1,41 @@
-import { CheckCircle, Circle } from '@phosphor-icons/react';
+import { CheckCircle, Circle, XCircle } from '@phosphor-icons/react';
+import { deleteTodo, updateTodoStatus } from '~/api/router';
 import { useMutation, useQueryClient } from 'react-query';
 
 import { FC } from 'react';
 import { Todo } from '~/types';
 import date from 'date-and-time';
-import { updateTodoStatus } from '~/api/router';
+import { useRouter } from 'next/router';
 
 const TodoItem: FC<Todo> = ({ id, description, isDone, dueAt, category }) => {
 	const queryClient = useQueryClient();
+	const { pathname } = useRouter();
+
+	const { mutate: mutateDelete } = useMutation({
+		mutationFn: deleteTodo,
+		onSuccess: () => {
+			if (pathname === '/')
+				queryClient.invalidateQueries({
+					queryKey: ['todos-today'],
+				});
+			else
+				queryClient.invalidateQueries({
+					queryKey: ['todos'],
+				});
+		},
+	});
 
 	const updateTask = useMutation({
 		mutationFn: updateTodoStatus,
 		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: ['todos'],
-			});
-			queryClient.invalidateQueries({
-				queryKey: ['todos-today'],
-			});
+			if (pathname === '/')
+				queryClient.invalidateQueries({
+					queryKey: ['todos-today'],
+				});
+			else
+				queryClient.invalidateQueries({
+					queryKey: ['todos'],
+				});
 		},
 	});
 
@@ -25,12 +43,16 @@ const TodoItem: FC<Todo> = ({ id, description, isDone, dueAt, category }) => {
 		updateTask.mutate({ id, isDone: !isDone });
 	};
 
+	const deleteTask = () => {
+		mutateDelete(id);
+	};
+
 	return (
 		<div
-			className={`card w-1/2 bg-base-100 shadow-sm hover:shadow-md border my-1 ${
+			className={`group indicator card relative w-1/2 bg-base-100 shadow-sm hover:shadow-md border my-2 ${
 				isDone ? 'bg-gray-200' : ''
 			}`}>
-			<div className="card-body p-8 flex-row">
+			<div className="card-body p-4 flex-row">
 				{isDone ? (
 					<button className="relative" onClick={toggleTask}>
 						<CheckCircle size={32} />
@@ -40,7 +62,7 @@ const TodoItem: FC<Todo> = ({ id, description, isDone, dueAt, category }) => {
 						<Circle size={32} />
 					</button>
 				)}
-				<div className="w-full flex justify-between">
+				<div className="w-full flex justify-between my-4 mx-4">
 					<div>
 						<p className="align-middle leading-8">{description}</p>
 						<p className="align-middle leading-8 text-sm">
@@ -54,6 +76,11 @@ const TodoItem: FC<Todo> = ({ id, description, isDone, dueAt, category }) => {
 					</div>
 				</div>
 			</div>
+			<button
+				className="indicator-item invisible group-hover:visible hover:cursor-pointer text-red-600 hover:text-red-700"
+				onClick={deleteTask}>
+				<XCircle size={28} weight="fill" />
+			</button>
 		</div>
 	);
 };

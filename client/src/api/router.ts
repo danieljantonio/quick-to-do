@@ -60,3 +60,10 @@ export const postTodo = async (data: {
 }) => {
 	return axios.post<Todo>('http://localhost:5000/todos', data, config);
 };
+
+export const deleteTodo = async (id: string) => {
+	return axios.delete<{ removed: boolean }>(
+		`http://localhost:5000/todos/${id}`,
+		config,
+	);
+};

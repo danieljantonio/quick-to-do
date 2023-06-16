@@ -70,7 +70,8 @@ export class TodosService {
 		});
 	}
 
-	remove(id: string) {
-		return this.prisma.todo.delete({ where: { id } });
+	async remove(id: string) {
+		const removed = await this.prisma.todo.delete({ where: { id } });
+		return { removed: removed ? true : false };
 	}
 }
