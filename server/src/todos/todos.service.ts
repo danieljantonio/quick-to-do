@@ -1,6 +1,12 @@
+import {
+	BadRequestException,
+	Injectable,
+	NotFoundException,
+} from '@nestjs/common';
+
 import { CreateTodoDto } from './dto/create-todo.dto';
-import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ReqUser } from 'src/users/users.service';
 import { Request } from 'express';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import date from 'date-and-time';
@@ -8,18 +14,35 @@ import date from 'date-and-time';
 @Injectable()
 export class TodosService {
 	constructor(private prisma: PrismaService) {}
-	create(createTodoDto: CreateTodoDto, req: Request) {
-		return this.prisma.todo.create({ data: createTodoDto });
+	async create(createTodoDto: CreateTodoDto, req: Request) {
+		const _user = req.user as ReqUser;
+		if (!_user) throw new BadRequestException(`No user found`);
+
+		return this.prisma.todo.create({
+			data: {
+				...createTodoDto,
+				userId: _user.id,
+			},
+		});
 	}
 
 	findAll(req: Request) {
+		const _user = req.user as ReqUser;
+		if (!_user) throw new BadRequestException(`No user found`);
+
 		console.log({
-			where: { userId: req.user },
+			where: { userId: _user.id },
+			orderBy: {
+				dueAt: 'asc',
+			},
 			include: { category: true },
 		});
 
 		return this.prisma.todo.findMany({
-			where: { userId: req.user },
+			where: { userId: _user.id },
+			orderBy: {
+				dueAt: 'asc',
+			},
 			include: { category: true },
 		});
 	}
@@ -40,7 +63,10 @@ export class TodosService {
 	}
 
 	update(id: string, updateTodoDto: UpdateTodoDto) {
-		return `This action updates a #${id} todo`;
+		return this.prisma.todo.update({
+			where: { id },
+			data: updateTodoDto,
+		});
 	}
 
 	remove(id: string) {

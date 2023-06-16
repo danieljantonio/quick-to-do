@@ -13,6 +13,7 @@ export class AuthService {
 
 	async login(username: string): Promise<AuthEntity> {
 		const user = await this.prisma.user.findUnique({ where: { username } });
+
 		if (!user) {
 			throw new NotFoundException(`No user found for email: ${username}`);
 		}
