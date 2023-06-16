@@ -7,8 +7,8 @@ export class CreateTodoDto {
 	@ApiProperty({ required: false })
 	categoryId?: string;
 
-	@ApiProperty({required: false})
-	isDone: boolean
+	@ApiProperty({ required: false })
+	isDone: boolean;
 
 	@ApiProperty()
 	userId: string;
