@@ -5,24 +5,24 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class TodosService {
-    constructor(private prisma: PrismaService) {}
-  create(createTodoDto: CreateTodoDto) {
-    return 'This action adds a new todo';
-  }
+	constructor(private prisma: PrismaService) {}
+	create(createTodoDto: CreateTodoDto) {
+		return this.prisma.todo.create({ data: createTodoDto });
+	}
 
-  findAll() {
-    return `This action returns all todos`;
-  }
+	findAll() {
+		return this.prisma.todo.findMany();
+	}
 
-  findOne(id: number) {
-    return `This action returns a #${id} todo`;
-  }
+	findOne(id: string) {
+		return this.prisma.todo.findUnique({ where: { id } });
+	}
 
-  update(id: number, updateTodoDto: UpdateTodoDto) {
-    return `This action updates a #${id} todo`;
-  }
+	update(id: string, updateTodoDto: UpdateTodoDto) {
+		return `This action updates a #${id} todo`;
+	}
 
-  remove(id: number) {
-    return `This action removes a #${id} todo`;
-  }
+	remove(id: string) {
+		return this.prisma.todo.delete({ where: { id } });
+	}
 }
