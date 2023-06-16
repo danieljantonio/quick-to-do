@@ -1,4 +1,9 @@
-import { CalendarCheck, CellSignalFull, House } from '@phosphor-icons/react';
+import {
+	CalendarCheck,
+	CellSignalFull,
+	House,
+	ListPlus,
+} from '@phosphor-icons/react';
 import Link from 'next/link';
 
 const Navigation = () => {
@@ -11,9 +16,9 @@ const Navigation = () => {
 				<Link href="/todos">
 					<CalendarCheck size={32} />
 				</Link>
-				<button>
-					<CellSignalFull size={32} />
-				</button>
+				<Link href="/new">
+					<ListPlus size={32} />
+				</Link>
 			</div>
 		</div>
 	);
