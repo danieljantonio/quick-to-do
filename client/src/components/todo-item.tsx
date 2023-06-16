@@ -1,12 +1,23 @@
 import { CheckCircle, Circle } from '@phosphor-icons/react';
+import { useMutation, useQueryClient } from 'react-query';
 
 import { FC } from 'react';
 import { Todo } from '~/types';
 import date from 'date-and-time';
+import { updateTodoStatus } from '~/api/router';
 
-const TodoItem: FC<Todo> = ({ description, isDone, dueAt, category }) => {
-	const finishTask = () => {
-		console.log(description);
+const TodoItem: FC<Todo> = ({ id, description, isDone, dueAt, category }) => {
+	const queryClient = useQueryClient();
+
+	const updateTask = useMutation({
+		mutationFn: updateTodoStatus,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['todos'] });
+		},
+	});
+
+	const toggleTask = () => {
+		updateTask.mutate({ id, isDone: !isDone });
 	};
 
 	return (
@@ -16,11 +27,11 @@ const TodoItem: FC<Todo> = ({ description, isDone, dueAt, category }) => {
 			}`}>
 			<div className="card-body p-8 flex-row">
 				{isDone ? (
-					<button className="relative" onClick={finishTask}>
+					<button className="relative" onClick={toggleTask}>
 						<CheckCircle size={32} />
 					</button>
 				) : (
-					<button className="relative" onClick={finishTask}>
+					<button className="relative" onClick={toggleTask}>
 						<Circle size={32} />
 					</button>
 				)}
