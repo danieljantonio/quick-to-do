@@ -36,9 +36,7 @@ const Todos: NextPage = () => {
 				) : (
 					<div className="w-full">
 						<div className="w-full">
-							<div className="divider w-3/5 mx-auto">
-								Due Today - {date.format(today, 'D MMM')}
-							</div>
+							<div className="divider w-3/5 mx-auto"></div>
 						</div>
 
 						<div className="w-full flex flex-col items-center">
