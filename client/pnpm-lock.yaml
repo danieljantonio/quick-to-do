@@ -14,6 +14,9 @@ dependencies:
   daisyui:
     specifier: ^3.1.0
     version: 3.1.0(postcss@8.4.24)
+  date-and-time:
+    specifier: ^3.0.1
+    version: 3.0.1
   next:
     specifier: ^13.4.6
     version: 13.4.6(react-dom@18.2.0)(react@18.2.0)
@@ -848,6 +851,10 @@ packages:
   /damerau-levenshtein@1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
     dev: true
+
+  /date-and-time@3.0.1:
+    resolution: {integrity: sha512-Az1hy3IPuh7LR4duPGlgkUzZXtjoWH8pd+XVLpLXMNd+DD48sRdcsWIPbqdHCXg4izb9lPzrKtqUXPXevS9g4Q==}
+    dev: false
 
   /debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
