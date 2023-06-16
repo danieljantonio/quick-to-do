@@ -10,4 +10,5 @@ export type Todo = {
 	categoryId: string;
 	isDone: boolean;
 	userId: string;
+	dueAt: date;
 };
