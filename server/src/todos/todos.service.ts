@@ -35,28 +35,6 @@ export class TodosService {
 	findAll(req: Request, query: FindTodoDto) {
 		const _user = req.user as ReqUser;
 		if (!_user) throw new BadRequestException(`No user found`);
-		console.log(query);
-		console.log({
-			where: {
-				userId: _user.id,
-				dueAt: {
-					gte: query.dateStart
-						? new Date(setDateStart(new Date(query.dateStart)))
-						: undefined,
-					lte: query.dateEnd
-						? new Date(setDateEnd(new Date(query.dateEnd)))
-						: undefined,
-				},
-				isDone: query.isDone ? !!parseInt(query.isDone) : undefined,
-			},
-			orderBy: {
-				dueAt:
-					!query.sortDesc || !!!parseInt(query.sortDesc)
-						? 'asc'
-						: 'desc',
-			},
-			include: { category: true },
-		});
 
 		return this.prisma.todo.findMany({
 			where: {
