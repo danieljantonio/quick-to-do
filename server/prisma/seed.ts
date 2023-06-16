@@ -1,11 +1,14 @@
 // prisma/seed.ts
 
 import { PrismaClient } from '@prisma/client';
+const date = require('date-and-time');
 
 // initialize Prisma Client
 const prisma = new PrismaClient();
 
 async function main() {
+	const newDate = new Date()
+	
 	const category1 = await prisma.category.upsert({
 		where: { name: 'Personal' },
 		update: {},
@@ -62,14 +65,116 @@ async function main() {
 
 	const todo1 = await prisma.todo.create({
 		data: {
-			title: 'Perform interview',
-			dueAt: new Date(),
+			description: 'Perform interview',
+			dueAt: date.addHours(newDate, 5).toISOString(),
+			userId: user1.id,
+			categoryId: category1.id,
+		},
+	});
+	
+	const todo2 = await prisma.todo.create({
+		data: {
+			description: 'Perform surgery',
+			dueAt: date.addDays(date.addHours(newDate, 5), 3),
+			userId: user1.id,
+			categoryId: category2.id,
+		},
+	});
+
+	
+	const todo3 = await prisma.todo.create({
+		data: {
+			description: 'Workout',
+			dueAt: newDate,
 			userId: user1.id,
 			categoryId: category1.id,
 		},
 	});
 
-	console.log({ category1, category2, category3, user1, user2, user3, todo1 });
+	
+	const todo4 = await prisma.todo.create({
+		data: {
+			description: 'Brain Surgery',
+			dueAt: newDate,
+			userId: user2.id,
+			categoryId: category1.id,
+		},
+	});
+
+	
+	const pastTodo1 = await prisma.todo.create({
+		data: {
+			description: 'Workout',
+			isDone: true,
+			dueAt: date.addHours(newDate, -1),
+			userId: user1.id,
+			categoryId: category1.id,
+		},
+	});
+
+	const pastTodo2 = await prisma.todo.create({
+		data: {
+			description: 'Workout',
+			isDone: true,
+			dueAt: date.addHours(newDate, -3),
+			userId: user1.id,
+			categoryId: category1.id,
+		},
+	});
+	
+	const pastTodo3 = await prisma.todo.create({
+		data: {
+			description: 'Workout',
+			isDone: true,
+			dueAt: date.addHours(newDate, -5),
+			userId: user1.id,
+			categoryId: category1.id,
+		},
+	});
+
+	
+	const pastTodo4 = await prisma.todo.create({
+		data: {
+			description: 'Workout',
+			isDone: true,
+			dueAt: date.addHours(newDate, -2),
+			userId: user2.id,
+			categoryId: category1.id,
+		},
+	});
+
+	const pastTodo5 = await prisma.todo.create({
+		data: {
+			description: 'Workout',
+			isDone: true,
+			dueAt: date.addHours(newDate, -3),
+			userId: user2.id,
+			categoryId: category1.id,
+		},
+	});
+	
+	const pastTodo6 = await prisma.todo.create({
+		data: {
+			description: 'Workout',
+			isDone: true,
+			dueAt: date.addHours(newDate, -8),
+			userId: user2.id,
+			categoryId: category1.id,
+		},
+	});
+
+	
+	const pastTodo7 = await prisma.todo.create({
+		data: {
+			description: 'Interview new employee',
+			isDone: true,
+			dueAt: date.addHours(newDate, -4),
+			userId: user2.id,
+			categoryId: category2.id,
+		},
+	});
+
+	console.log('DB has been seeded');
 }
 
 // execute the main function
