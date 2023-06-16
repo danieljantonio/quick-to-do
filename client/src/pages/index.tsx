@@ -7,7 +7,7 @@ import { Todo } from '~/types';
 
 const Home: NextPage = () => {
 	const { isLoading, data } = useQuery({
-		queryKey: ['todos'],
+		queryKey: ['todos-today'],
 		queryFn: getTodosToday,
 		refetchOnWindowFocus: false,
 	});

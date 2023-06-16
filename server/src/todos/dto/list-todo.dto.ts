@@ -2,11 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class FindTodoDto {
 	@ApiProperty({ required: false })
-	dateStart?: string
-	
+	dateStart?: string;
+
 	@ApiProperty({ required: false })
-	dateEnd?: string
-	
+	dateEnd?: string;
+
 	@ApiProperty({ required: false })
-	sortDesc?: boolean
+	sortDesc?: string;
+
+	@ApiProperty({ required: false })
+	isDone?: string;
 }

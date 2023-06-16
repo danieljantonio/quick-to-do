@@ -2,9 +2,26 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import TodoItem from '~/components/todo-item';
 import date from 'date-and-time';
+import { TodoQuery, getTodos } from '~/api/router';
+import { Todo } from '~/types';
+import { useQuery } from 'react-query';
+import { useState } from 'react';
 
 const Todos: NextPage = () => {
 	const today = new Date();
+	const [filters, setFilters] = useState<TodoQuery>({});
+
+	const { isLoading, data } = useQuery({
+		queryKey: ['todos'],
+		queryFn: () => getTodos(filters),
+		refetchOnWindowFocus: false,
+	});
+
+	const notDoneFirst = (data?: Todo[]) => {
+		if (!data) return [];
+		return data.sort((todo) => (todo.isDone ? 1 : -1));
+	};
+
 	return (
 		<>
 			<Head>
@@ -14,37 +31,30 @@ const Todos: NextPage = () => {
 			</Head>
 			<main className="flex flex-col items-center justify-center h-full">
 				<p className="w-3/5 text-3xl">All Tasks</p>
-				<div className="w-full">
-					<div className="divider w-3/5 mx-auto">
-						Due Today - {date.format(today, 'D MMM')}
+				{isLoading ? (
+					<span className="loading loading-bars loading-lg"></span>
+				) : (
+					<div className="w-full">
+						<div className="w-full">
+							<div className="divider w-3/5 mx-auto">
+								Due Today - {date.format(today, 'D MMM')}
+							</div>
+						</div>
+
+						<div className="w-full flex flex-col items-center">
+							{notDoneFirst(data?.data).map((todo: Todo) => {
+								return <TodoItem key={todo.id} {...todo} />;
+							})}
+						</div>
 					</div>
-				</div>
-				<TodoItem />
-				<TodoItem />
-				<TodoItem />
-				<div className="w-full">
-					<div className="divider w-3/5 mx-auto">
-						{date.format(date.addDays(today, 1), 'D MMM')}
-					</div>
-				</div>
-				<TodoItem />
-				<div className="w-full">
-					<div className="divider w-3/5 mx-auto">
-						{date.format(date.addDays(today, 2), 'D MMM')}
-					</div>
-				</div>
-				<TodoItem />
-				<TodoItem />
-				<div className="w-full">
-					<div className="divider w-3/5 mx-auto">
-						{date.format(date.addDays(today, 3), 'D MMM')}
-					</div>
-				</div>
-				<TodoItem />
-				<TodoItem />
+				)}
 			</main>
 		</>
 	);
+};
+
+const NoTasks = () => {
+	return <div className="mx-auto text-lg">There are no tasks</div>;
 };
 
 export default Todos;

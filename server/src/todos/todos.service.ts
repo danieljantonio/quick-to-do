@@ -7,6 +7,16 @@ import { ReqUser } from 'src/users/users.service';
 import { Request } from 'express';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 
+export const setDateStart = (date: Date) => {
+	date.setHours(0, 0, 0, 0);
+	return date.toUTCString();
+};
+
+export const setDateEnd = (date: Date) => {
+	date.setHours(23, 59, 59, 999);
+	return date.toUTCString();
+};
+
 @Injectable()
 export class TodosService {
 	constructor(private prisma: PrismaService) {}
@@ -25,17 +35,47 @@ export class TodosService {
 	findAll(req: Request, query: FindTodoDto) {
 		const _user = req.user as ReqUser;
 		if (!_user) throw new BadRequestException(`No user found`);
+		console.log(query);
+		console.log({
+			where: {
+				userId: _user.id,
+				dueAt: {
+					gte: query.dateStart
+						? new Date(setDateStart(new Date(query.dateStart)))
+						: undefined,
+					lte: query.dateEnd
+						? new Date(setDateEnd(new Date(query.dateEnd)))
+						: undefined,
+				},
+				isDone: query.isDone ? !!parseInt(query.isDone) : undefined,
+			},
+			orderBy: {
+				dueAt:
+					!query.sortDesc || !!!parseInt(query.sortDesc)
+						? 'asc'
+						: 'desc',
+			},
+			include: { category: true },
+		});
 
 		return this.prisma.todo.findMany({
 			where: {
 				userId: _user.id,
 				dueAt: {
-					gte: new Date(query.dateStart) || undefined,
-					lte: new Date(query.dateEnd) || undefined,
+					gte: query.dateStart
+						? new Date(setDateStart(new Date(query.dateStart)))
+						: undefined,
+					lte: query.dateEnd
+						? new Date(setDateEnd(new Date(query.dateEnd)))
+						: undefined,
 				},
+				isDone: query.isDone ? !!parseInt(query.isDone) : undefined,
 			},
 			orderBy: {
-				dueAt: query.sortDesc ? 'desc' : 'asc',
+				dueAt:
+					!query.sortDesc || !!!parseInt(query.sortDesc)
+						? 'asc'
+						: 'desc',
 			},
 			include: { category: true },
 		});

@@ -15,31 +15,32 @@ const config = {
 	},
 };
 
-const setDateStart = (date: Date) => {
-	date.setHours(0, 0, 0, 0);
-	return date.toUTCString();
-};
-
-const setDateEnd = (date: Date) => {
-	date.setHours(23, 59, 59, 999);
-	return date.toUTCString();
-};
-
 export const getCategories = async () => {
 	return axios.get<Category[]>('http://localhost:5000/categories');
 };
 
+export type TodoQuery = {
+	dateStart?: string;
+	dateEnd?: string;
+	sortDesc?: '0' | '1';
+	isDone?: '0' | '1';
+};
+
 export const getTodosToday = async () => {
 	return axios.get<Todo[]>(
-		`http://localhost:5000/todos?dateStart=${setDateStart(
-			new Date(),
-		)}&dateEnd=${setDateEnd(new Date())}`,
+		`http://localhost:5000/todos?dateStart=${new Date()}&dateEnd=${new Date()}`,
 		config,
 	);
 };
 
-export const getTodos = async () => {
-	return axios.get<Todo[]>('http://localhost:5000/todos', config);
+export const getTodos = async (query?: TodoQuery) => {
+	const url = new URL('http://localhost:5000/todos');
+	return axios.get<Todo[]>(
+		`http://localhost:5000/todos?${
+			query ? new URLSearchParams(query).toString() : ''
+		}`,
+		config,
+	);
 };
 
 export const updateTodoStatus = async (data: {

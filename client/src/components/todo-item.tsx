@@ -12,7 +12,9 @@ const TodoItem: FC<Todo> = ({ id, description, isDone, dueAt, category }) => {
 	const updateTask = useMutation({
 		mutationFn: updateTodoStatus,
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['todos'] });
+			queryClient.invalidateQueries({
+				queryKey: ['todos', 'todos-today'],
+			});
 		},
 	});
 
