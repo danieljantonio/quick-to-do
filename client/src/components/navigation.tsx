@@ -1,5 +1,4 @@
 import { CalendarCheck, CellSignalFull, House } from '@phosphor-icons/react';
-import { useState } from 'react';
 
 const Navigation = () => {
 	return (

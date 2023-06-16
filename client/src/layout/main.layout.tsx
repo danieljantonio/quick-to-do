@@ -4,7 +4,7 @@ import Navigation from '~/components/navigation';
 const MainLayout: FC<PropsWithChildren> = ({ children }) => {
 	return (
 		<>
-			{children}
+			<div className="h-full py-10">{children}</div>
 			<nav className="w-full">
 				<Navigation />
 			</nav>
