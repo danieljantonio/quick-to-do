@@ -7,8 +7,8 @@ const date = require('date-and-time');
 const prisma = new PrismaClient();
 
 async function main() {
-	const newDate = new Date()
-	
+	const newDate = new Date();
+
 	const category1 = await prisma.category.upsert({
 		where: { name: 'Personal' },
 		update: {},
@@ -59,7 +59,7 @@ async function main() {
 		create: {
 			username: 'admin',
 			name: 'Admin',
-			role: 'USER',
+			role: 'ADMIN',
 		},
 	});
 
@@ -71,7 +71,7 @@ async function main() {
 			categoryId: category1.id,
 		},
 	});
-	
+
 	const todo2 = await prisma.todo.create({
 		data: {
 			description: 'Perform surgery',
@@ -81,7 +81,6 @@ async function main() {
 		},
 	});
 
-	
 	const todo3 = await prisma.todo.create({
 		data: {
 			description: 'Workout',
@@ -91,7 +90,6 @@ async function main() {
 		},
 	});
 
-	
 	const todo4 = await prisma.todo.create({
 		data: {
 			description: 'Brain Surgery',
@@ -101,7 +99,6 @@ async function main() {
 		},
 	});
 
-	
 	const pastTodo1 = await prisma.todo.create({
 		data: {
 			description: 'Workout',
@@ -121,7 +118,7 @@ async function main() {
 			categoryId: category1.id,
 		},
 	});
-	
+
 	const pastTodo3 = await prisma.todo.create({
 		data: {
 			description: 'Workout',
@@ -132,7 +129,6 @@ async function main() {
 		},
 	});
 
-	
 	const pastTodo4 = await prisma.todo.create({
 		data: {
 			description: 'Workout',
@@ -152,7 +148,7 @@ async function main() {
 			categoryId: category1.id,
 		},
 	});
-	
+
 	const pastTodo6 = await prisma.todo.create({
 		data: {
 			description: 'Workout',
@@ -163,7 +159,6 @@ async function main() {
 		},
 	});
 
-	
 	const pastTodo7 = await prisma.todo.create({
 		data: {
 			description: 'Interview new employee',
