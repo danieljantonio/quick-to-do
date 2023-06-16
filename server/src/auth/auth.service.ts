@@ -34,6 +34,8 @@ export class AuthService {
 
 	async authorizeUser(req: Request) {
 		const _user = req.user as ReqUser;
+		console.log(_user);
+
 		if (!_user) throw new BadRequestException(`No user found`);
 
 		const user = await this.prisma.user.findFirst({
