@@ -11,6 +11,7 @@
   "dependencies": {
     "@phosphor-icons/react": "^2.0.10",
     "@t3-oss/env-nextjs": "^0.3.1",
+    "axios": "^1.4.0",
     "daisyui": "^3.1.0",
     "date-and-time": "^3.0.1",
     "next": "^13.4.6",
