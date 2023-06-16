@@ -12,9 +12,10 @@ const Home: NextPage = () => {
 		refetchOnWindowFocus: false,
 	});
 
-	if (data) {
-		console.log(data.data);
-	}
+	const notDoneFirst = (data?: Todo[]) => {
+		if (!data) return [];
+		return data.sort((todo) => (todo.isDone ? 1 : -1));
+	};
 
 	return (
 		<>
@@ -32,7 +33,7 @@ const Home: NextPage = () => {
 					<span className="loading loading-bars loading-lg"></span>
 				) : (
 					<div className="w-full flex flex-col items-center">
-						{data?.data.map((todo: Todo) => {
+						{notDoneFirst(data?.data).map((todo: Todo) => {
 							return <TodoItem key={todo.id} {...todo} />;
 						})}
 					</div>
