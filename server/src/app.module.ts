@@ -5,9 +5,10 @@ import { Module } from '@nestjs/common';
 import { PrismaModule } from './prisma/prisma.module';
 import { TodosModule } from './todos/todos.module';
 import { UsersModule } from './users/users.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
-	imports: [PrismaModule, TodosModule, UsersModule, AuthModule],
+	imports: [PrismaModule, TodosModule, UsersModule, AuthModule, CategoriesModule],
 	controllers: [AppController],
 	providers: [AppService],
 })
