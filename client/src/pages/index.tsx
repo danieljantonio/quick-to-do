@@ -1,8 +1,21 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
+import { useQuery } from 'react-query';
+import { getTodos } from '~/api/router';
 import TodoItem from '~/components/todo-item';
+import { Todo } from '~/types';
 
 const Home: NextPage = () => {
+	const { isLoading, data } = useQuery({
+		queryKey: ['todos'],
+		queryFn: getTodos,
+		refetchOnWindowFocus: false,
+	});
+
+	if (data) {
+		console.log(data.data);
+	}
+
 	return (
 		<>
 			<Head>
@@ -15,9 +28,15 @@ const Home: NextPage = () => {
 				<div className="w-full">
 					<div className="divider w-3/5 mx-auto">Due Today</div>
 				</div>
-				<TodoItem />
-				<TodoItem />
-				<TodoItem />
+				{isLoading ? (
+					<span className="loading loading-bars loading-lg"></span>
+				) : (
+					<div className="w-full flex flex-col items-center">
+						{data?.data.map((todo: Todo) => {
+							return <TodoItem key={todo.id} {...todo} />;
+						})}
+					</div>
+				)}
 			</main>
 		</>
 	);

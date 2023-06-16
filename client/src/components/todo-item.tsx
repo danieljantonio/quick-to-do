@@ -1,8 +1,10 @@
 import { Circle } from '@phosphor-icons/react';
+import { FC } from 'react';
+import { Todo } from '~/types';
 
-const TodoItem = () => {
+const TodoItem: FC<Todo> = ({ description }) => {
 	const finishTask = () => {
-		console.log('task finished');
+		console.log(description);
 	};
 	return (
 		<div className="card w-1/2 bg-base-100 shadow-sm hover:shadow-md border my-1">
@@ -10,9 +12,7 @@ const TodoItem = () => {
 				<button className="relative" onClick={finishTask}>
 					<Circle size={32} />
 				</button>
-				<p className="align-middle leading-8">
-					We are using cookies for no reason.
-				</p>
+				<p className="align-middle leading-8">{description}</p>
 			</div>
 		</div>
 	);

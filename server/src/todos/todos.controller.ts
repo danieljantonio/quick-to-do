@@ -7,12 +7,14 @@ import {
 	Param,
 	Delete,
 	UseGuards,
+	Req,
 } from '@nestjs/common';
 import { TodosService } from './todos.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Request } from 'express';
 
 @Controller('todos')
 @ApiTags('todos')
@@ -22,15 +24,22 @@ export class TodosController {
 	@Post()
 	@UseGuards(JwtAuthGuard)
 	@ApiBearerAuth()
-	create(@Body() createTodoDto: CreateTodoDto) {
-		return this.todosService.create(createTodoDto);
+	create(@Body() createTodoDto: CreateTodoDto, @Req() req: Request) {
+		return this.todosService.create(createTodoDto, req);
 	}
 
 	@Get()
 	@UseGuards(JwtAuthGuard)
 	@ApiBearerAuth()
-	findAll() {
-		return this.todosService.findAll();
+	findAll(@Req() req: Request) {
+		return this.todosService.findAll(req);
+	}
+
+	@Get('/today')
+	@UseGuards(JwtAuthGuard)
+	@ApiBearerAuth()
+	findAllToday() {
+		return this.todosService.findAllToday();
 	}
 
 	@Get(':id')

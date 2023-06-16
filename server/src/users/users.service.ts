@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-	findAll() {
-		return `This action returns all users`;
-	}
+	constructor(private prisma: PrismaService) {}
 
-	findOne(id: string) {
-		return `This action returns a #${id} user`;
+	verifyUser(id: string) {
+		const user = this.prisma.user.findUnique({ where: { id } });
+		if (!user) return null;
+		return id;
 	}
 }
