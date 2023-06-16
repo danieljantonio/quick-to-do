@@ -48,7 +48,7 @@ const NewTodo: NextPage = () => {
 						{errors?.title && (
 							<label className="label">
 								<span className="label-text-alt text-red-500">
-									This field is required!
+									Please enter the task description
 								</span>
 							</label>
 						)}
@@ -81,7 +81,7 @@ const NewTodo: NextPage = () => {
 						{errors?.dueAt && (
 							<label className="label">
 								<span className="label-text-alt text-red-500">
-									This field is required!
+									Please enter when the task is due
 								</span>
 							</label>
 						)}
