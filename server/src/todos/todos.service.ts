@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+	BadRequestException,
+	Injectable,
+	UnauthorizedException,
+} from '@nestjs/common';
 
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { FindTodoDto } from './dto/list-todo.dto';
@@ -29,6 +33,35 @@ export class TodosService {
 				...createTodoDto,
 				userId: _user.id,
 			},
+		});
+	}
+
+	adminFindAll(req: Request, query: FindTodoDto) {
+		const _user = req.user as ReqUser;
+		if (!_user) throw new BadRequestException(`No user found`);
+
+		if (_user.role !== 'ADMIN')
+			throw new UnauthorizedException('Insufficient Access');
+
+		return this.prisma.todo.findMany({
+			where: {
+				dueAt: {
+					gte: query.dateStart
+						? new Date(setDateStart(new Date(query.dateStart)))
+						: undefined,
+					lte: query.dateEnd
+						? new Date(setDateEnd(new Date(query.dateEnd)))
+						: undefined,
+				},
+				isDone: query.isDone ? !!parseInt(query.isDone) : undefined,
+			},
+			orderBy: {
+				dueAt:
+					!query.sortDesc || !!!parseInt(query.sortDesc)
+						? 'asc'
+						: 'desc',
+			},
+			include: { category: true },
 		});
 	}
 

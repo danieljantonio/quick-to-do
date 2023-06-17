@@ -37,6 +37,13 @@ export class TodosController {
 		return this.todosService.findAll(req, query);
 	}
 
+	@Get('/admin')
+	@UseGuards(JwtAuthGuard)
+	@ApiBearerAuth()
+	adminFindAll(@Query() query: FindTodoDto, @Req() req: Request) {
+		return this.todosService.adminFindAll(req, query);
+	}
+
 	@Get(':id')
 	@UseGuards(JwtAuthGuard)
 	@ApiBearerAuth()
