@@ -2,10 +2,14 @@
 
 import { PrismaClient } from '@prisma/client';
 const date = require('date-and-time');
-const newDate = new Date();
 
 // initialize Prisma Client
 const prisma = new PrismaClient();
+
+const getDate = (dPlus: number) => {
+	const newDate = date.addDays(new Date(), dPlus);
+	return new Date(newDate);
+};
 
 async function main() {
 	const user1 = await prisma.user.upsert({
@@ -65,7 +69,7 @@ async function main() {
 	await prisma.todo.create({
 		data: {
 			description: 'Perform interview',
-			dueAt: date.addHours(newDate, 1).toISOString(),
+			dueAt: getDate(1),
 			userId: user1.id,
 			categoryId: category1.id,
 		},
@@ -74,7 +78,7 @@ async function main() {
 	await prisma.todo.create({
 		data: {
 			description: 'Perform surgery',
-			dueAt: date.addDays(date.addHours(newDate, 3), 3),
+			dueAt: getDate(3),
 			userId: user1.id,
 			categoryId: category2.id,
 		},
@@ -83,7 +87,7 @@ async function main() {
 	await prisma.todo.create({
 		data: {
 			description: 'Workout',
-			dueAt: newDate,
+			dueAt: new Date(),
 			userId: user1.id,
 			categoryId: category1.id,
 		},
@@ -92,7 +96,7 @@ async function main() {
 	await prisma.todo.create({
 		data: {
 			description: 'Brain Surgery',
-			dueAt: date.addDays(date.addHours(newDate, 3), 3),
+			dueAt: getDate(3),
 			userId: user2.id,
 			categoryId: category1.id,
 		},
@@ -102,7 +106,7 @@ async function main() {
 		data: {
 			description: 'Doctor Appointment for surgery',
 			isDone: true,
-			dueAt: date.addHours(newDate, -5),
+			dueAt: getDate(-5),
 			userId: user1.id,
 			categoryId: category1.id,
 		},
@@ -112,7 +116,7 @@ async function main() {
 		data: {
 			description: 'Meet mr. robert for surgery brief',
 			isDone: true,
-			dueAt: date.addHours(newDate, -5),
+			dueAt: getDate(-5),
 			userId: user2.id,
 			categoryId: category1.id,
 		},
@@ -122,7 +126,7 @@ async function main() {
 		data: {
 			description: 'Workout',
 			isDone: true,
-			dueAt: date.addHours(newDate, -6),
+			dueAt: getDate(-6),
 			userId: user1.id,
 			categoryId: category1.id,
 		},
@@ -132,7 +136,7 @@ async function main() {
 		data: {
 			description: 'Hiking Trip with Medical Team',
 			isDone: true,
-			dueAt: date.addHours(newDate, -10),
+			dueAt: getDate(-10),
 			userId: user2.id,
 			categoryId: category1.id,
 		},
@@ -142,7 +146,7 @@ async function main() {
 		data: {
 			description: 'Family Dinner',
 			isDone: true,
-			dueAt: date.addHours(newDate, -8),
+			dueAt: getDate(-8),
 			userId: user1.id,
 			categoryId: category3.id,
 		},
@@ -152,7 +156,7 @@ async function main() {
 		data: {
 			description: 'Workout',
 			isDone: true,
-			dueAt: date.addHours(newDate, -8),
+			dueAt: getDate(-8),
 			userId: user2.id,
 			categoryId: category1.id,
 		},
@@ -161,10 +165,64 @@ async function main() {
 	await prisma.todo.create({
 		data: {
 			description: 'Interview new employee',
-			isDone: true,
-			dueAt: date.addHours(newDate, -4),
+			dueAt: getDate(4),
 			userId: user2.id,
 			categoryId: category2.id,
+		},
+	});
+
+	await prisma.todo.create({
+		data: {
+			description: 'Hiking Trip 2 with Medical Team (Professor A is joining)',
+			dueAt: getDate(6),
+			userId: user2.id,
+			categoryId: category1.id,
+		},
+	});
+
+	await prisma.todo.create({
+		data: {
+			description: 'Team bonding dinner',
+			dueAt: getDate(4),
+			userId: user1.id,
+			categoryId: category2.id,
+		},
+	});
+
+	await prisma.todo.create({
+		data: {
+			description: 'Dinner with In-Laws',
+			dueAt: getDate(4),
+			userId: user1.id,
+			categoryId: category3.id,
+		},
+	});
+
+	await prisma.todo.create({
+		data: {
+			description: 'Dinner with Parents',
+			isDone: true,
+			dueAt: getDate(-3),
+			userId: user1.id,
+			categoryId: category3.id,
+		},
+	});
+
+	await prisma.todo.create({
+		data: {
+			description: 'Dinner with Parents',
+			dueAt: getDate(7),
+			userId: user1.id,
+			categoryId: category3.id,
+		},
+	});
+
+	await prisma.todo.create({
+		data: {
+			description: 'Date with fiance',
+			dueAt: getDate(6),
+			userId: user2.id,
+			categoryId: category3.id,
 		},
 	});
 
