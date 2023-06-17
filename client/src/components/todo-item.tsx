@@ -7,45 +7,45 @@ import { Todo } from '~/types';
 import date from 'date-and-time';
 import { useRouter } from 'next/router';
 
-const TodoItem: FC<Todo> = ({ id, description, isDone, dueAt, category }) => {
+const TodoItem: FC<Todo> = ({
+	id,
+	description,
+	isDone,
+	dueAt,
+	category,
+	user,
+}) => {
 	const queryClient = useQueryClient();
 	const { pathname } = useRouter();
 
+	const onSuccess = () => {
+		if (pathname === '/')
+			queryClient.invalidateQueries({
+				queryKey: ['todos-today'],
+			});
+		else if (pathname === '/manage')
+			queryClient.invalidateQueries({
+				queryKey: ['admin-todos'],
+			});
+		else
+			queryClient.invalidateQueries({
+				queryKey: ['todos'],
+			});
+	};
+
 	const { mutate: mutateDelete } = useMutation({
 		mutationFn: deleteTodo,
-		onSuccess: () => {
-			if (pathname === '/')
-				queryClient.invalidateQueries({
-					queryKey: ['todos-today'],
-				});
-			else
-				queryClient.invalidateQueries({
-					queryKey: ['todos'],
-				});
-		},
+		onSuccess: onSuccess,
 	});
 
 	const updateTask = useMutation({
 		mutationFn: updateTodoStatus,
-		onSuccess: () => {
-			if (pathname === '/')
-				queryClient.invalidateQueries({
-					queryKey: ['todos-today'],
-				});
-			else
-				queryClient.invalidateQueries({
-					queryKey: ['todos'],
-				});
-		},
+		onSuccess: onSuccess,
 	});
 
-	const toggleTask = () => {
-		updateTask.mutate({ id, isDone: !isDone });
-	};
+	const toggleTask = () => updateTask.mutate({ id, isDone: !isDone });
 
-	const deleteTask = () => {
-		mutateDelete(id);
-	};
+	const deleteTask = () => mutateDelete(id);
 
 	return (
 		<div
@@ -70,9 +70,16 @@ const TodoItem: FC<Todo> = ({ id, description, isDone, dueAt, category }) => {
 						</p>
 					</div>
 					<div className="flex items-center">
-						<p className="align-middle leading-8">
-							{category.name}
-						</p>
+						<div>
+							<p className="align-middle leading-8">
+								{category?.name}
+							</p>
+							{user ? (
+								<p className="align-middle leading-8 text-sm text-right">
+									by: {user?.username}
+								</p>
+							) : null}
+						</div>
 					</div>
 				</div>
 			</div>
