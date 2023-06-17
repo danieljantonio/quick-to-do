@@ -1,11 +1,11 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import TodoItem from '~/components/todo-item';
-import date from 'date-and-time';
 import { TodoQuery, getTodos } from '~/api/router';
 import { Todo } from '~/types';
 import { useQuery } from 'react-query';
 import { useEffect, useState } from 'react';
+import TodoFilter from '~/components/todo-filter';
 
 const Todos: NextPage = () => {
 	const today = new Date();
@@ -36,44 +36,19 @@ const Todos: NextPage = () => {
 			<main className="flex flex-col items-center justify-center h-full">
 				<div className="w-3/5 flex justify-between">
 					<p className="text-3xl w-fit">All Tasks</p>
-					<div className="flex gap-4">
-						<div className="form-control">
-							<span className="label-text">Start Date</span>
-							<input
-								onChange={(e) =>
-									setFilters({
-										...filters,
-										dateStart: e.target.value,
-									})
-								}
-								type="date"
-								className="input input-bordered input-sm"
-							/>
-						</div>
-						<div className="form-control">
-							<span className="label-text">End Date</span>
-							<input
-								onChange={(e) =>
-									setFilters({
-										...filters,
-										dateEnd: e.target.value,
-									})
-								}
-								type="date"
-								className="input input-bordered input-sm"
-							/>
-						</div>
-					</div>
 				</div>
 				{isLoading ? (
 					<span className="loading loading-bars loading-lg"></span>
 				) : (
 					<div className="w-full">
-						<div className="w-full">
-							<div className="divider w-3/5 mx-auto"></div>
+						<div className="w-3/5 mx-auto">
+							<div className="divider"></div>
+							<TodoFilter filters={filters} setFilters={setFilters} />
 						</div>
 
 						<div className="w-full flex flex-col items-center">
+							{data?.data.length === 0 ? <div className="mx-auto text-md italic text-gray-500 my-4">There are no tasks</div> : null}
+
 							{notDoneFirst(data?.data).map((todo: Todo) => {
 								return <TodoItem key={todo.id} {...todo} />;
 							})}
@@ -83,10 +58,6 @@ const Todos: NextPage = () => {
 			</main>
 		</>
 	);
-};
-
-const NoTasks = () => {
-	return <div className="mx-auto text-lg">There are no tasks</div>;
 };
 
 export default Todos;

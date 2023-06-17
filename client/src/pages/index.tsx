@@ -33,6 +33,7 @@ const Home: NextPage = () => {
 					<span className="loading loading-bars loading-lg"></span>
 				) : (
 					<div className="w-full flex flex-col items-center">
+						{data?.data.length === 0 ? <div className="mx-auto text-md italic text-gray-500 my-4">There are no tasks</div> : null}
 						{notDoneFirst(data?.data).map((todo: Todo) => {
 							return <TodoItem key={todo.id} {...todo} />;
 						})}
