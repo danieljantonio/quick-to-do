@@ -61,7 +61,7 @@ export class TodosService {
 						? 'asc'
 						: 'desc',
 			},
-			include: { category: true },
+			include: { category: true, user: true },
 		});
 	}
 
