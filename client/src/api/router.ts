@@ -7,7 +7,7 @@ const user1Token =
 const user2Token =
 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbGl5OGJwc28wMDA4dHlyZnZwZ3dqZXg2IiwiaWF0IjoxNjg2OTUyMjc4LCJleHAiOjE2ODY5NzM4Nzh9.3nfy7x1KvI2HIxVmn070W94GdPX9dUGtsW55XLLw0To';
 const adminToken =
-	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbGl6M3hyOGQwMDBhdHl5bmowN3NxNXUyIiwiaWF0IjoxNjg2OTUyNDc1LCJleHAiOjE2ODY5NzQwNzV9.kunZDLz-Ci-IP9-I06dpPUEXbhHdIDZN-f-u6vXZ8qo';
+	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbGl6M3hyOGQwMDBhdHl5bmowN3NxNXUyIiwiaWF0IjoxNjg2OTk4NzI1LCJleHAiOjE2ODcwMjAzMjV9.SyN5xnXWINDT00V75WQiAzReyJ45QOJLTnMykQlWp9U';
 
 const config = {
 	headers: {
@@ -28,7 +28,7 @@ export type TodoQuery = {
 
 export const getTodosToday = async () => {
 	return axios.get<Todo[]>(
-		`http://localhost:5000/todos?dateStart=${new Date()}&dateEnd=${new Date()}`,
+		`http://localhost:5000/todos?dateStart=${new Date().toISOString()}&dateEnd=${new Date().toISOString()}`,
 		config,
 	);
 };
@@ -71,6 +71,15 @@ export const deleteTodo = async (id: string) => {
 export const authorizeAdmin = async () => {
 	return axios.get<{ authorized: boolean }>(
 		'http://localhost:5000/auth',
+		config,
+	);
+};
+
+export const getAdminTodos = async (query?: TodoQuery) => {
+	return axios.get<Todo[]>(
+		`http://localhost:5000/todos/admin?${
+			query ? new URLSearchParams(query).toString() : ''
+		}`,
 		config,
 	);
 };
