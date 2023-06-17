@@ -107,4 +107,27 @@ export class TodosService {
 		const removed = await this.prisma.todo.delete({ where: { id } });
 		return { removed: removed ? true : false };
 	}
+
+	async getAdminStatistics(req: Request, query: FindTodoDto) {
+		const _user = req.user as ReqUser;
+		if (!_user) throw new BadRequestException(`No user found`);
+
+		if (_user.role !== 'ADMIN')
+			throw new UnauthorizedException('Insufficient Access');
+
+		const count = await this.prisma.todo.count({
+			where: {
+				dueAt: {
+					gte: query.dateStart
+						? new Date(setDateStart(new Date(query.dateStart)))
+						: undefined,
+					lte: query.dateEnd
+						? new Date(setDateEnd(new Date(query.dateEnd)))
+						: undefined,
+				},
+			},
+		});
+
+		return { count };
+	}
 }
