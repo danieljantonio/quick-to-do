@@ -41,7 +41,7 @@ export const getCategories = () => {
 
 // To do routers
 export const getTodosToday = () => {
-	return axios.get<Todo[]>(`http://localhost:5000/todos?dateStart=${new Date(setDateStart(new Date())).toISOString()}&dateEnd=${new Date(setDateEnd(new Date())).toISOString()}`, config);
+	return axios.get<Todo[]>(`http://localhost:5000/todos?dateStart=${new Date().toISOString()}&dateEnd=${new Date().toISOString()}`, config);
 };
 
 export const getTodos = (query?: TodoQuery) => {
