@@ -22,7 +22,7 @@ const TodoFilter: FC<{
 					<p className="text-md">Filter by due date</p>
 					<div className="flex space-y-4 flex-col">
 						<div className="join w-full">
-							<button className="btn btn-disabled text-white join-item w-1/4 rounded-r-full">Start</button>
+							<button className="btn btn-disabled text-white join-item w-1/4 rounded-r-full">From</button>
 							<input
 								onChange={(e) =>
 									setFilters({
@@ -35,7 +35,7 @@ const TodoFilter: FC<{
 							/>
 						</div>
 						<div className="join w-full pb-2">
-							<button className="btn btn-disabled text-white join-item w-1/4 rounded-r-full">End</button>
+							<button className="btn btn-disabled text-white join-item w-1/4 rounded-r-full">To</button>
 							<input
 								onChange={(e) =>
 									setFilters({
