@@ -1,9 +1,16 @@
-import { BellRinging, ListChecks, ListPlus } from '@phosphor-icons/react';
-import { getNextWeekStats, getPastWeekStats } from '~/api/router';
+import { BellRinging, ListPlus } from '@phosphor-icons/react';
+import {
+	CategoryStats,
+	getCategories,
+	getNextWeekStats,
+	getPastWeekStats,
+} from '~/api/router';
+import { FC, useState } from 'react';
 
 import AdminLayout from '~/layout/admin.layout';
+import { Category } from '~/types';
+import { Pie } from 'react-chartjs-2';
 import { useQuery } from 'react-query';
-import { useState } from 'react';
 
 const Report = () => {
 	const [isPastStats, setPastStats] = useState(false);
@@ -17,6 +24,12 @@ const Report = () => {
 	const { isLoading: nwStatsLoading, data: nwData } = useQuery({
 		queryKey: ['coming-week-stats'],
 		queryFn: getNextWeekStats,
+		refetchOnWindowFocus: false,
+	});
+
+	const { isLoading: catIsLoading, data: catData } = useQuery({
+		queryKey: ['categories'],
+		queryFn: getCategories,
 		refetchOnWindowFocus: false,
 	});
 
@@ -45,7 +58,7 @@ const Report = () => {
 				{pwStatsLoading || nwStatsLoading ? (
 					<span className="loading loading-bars loading-lg"></span>
 				) : (
-					<div className="w-3/5">
+					<div className="w-3/5 flex justify-between">
 						<div className="stat self-start w-fit border rounded-lg mt-4">
 							<div className="stat-figure text-primary">
 								{isPastStats ? (
@@ -57,18 +70,64 @@ const Report = () => {
 							<div className="stat-value text-primary">
 								{isPastStats
 									? pwData?.data.count
-									: nwData?.data.count}
+									: nwData?.data.count}{' '}
+								todos
 							</div>
 							<div className="stat-desc text-sm">
 								{isPastStats
-									? 'Todos added the past week'
-									: 'Todos due next week'}
+									? 'added the past week'
+									: 'due next week'}
 							</div>
 						</div>
+
+						{catData?.data ? (
+							<PieChart
+								categories={catData?.data.reverse() || []}
+								chartData={
+									pwData?.data.categoryWithCount.reverse() ||
+									[]
+								}
+							/>
+						) : null}
 					</div>
 				)}
 			</>
 		</AdminLayout>
+	);
+};
+
+type ChartProps = {
+	categories: Category[];
+	chartData: CategoryStats[];
+};
+
+const PieChart: FC<ChartProps> = ({ categories, chartData }) => {
+	const labels: string[] = [];
+	const datas: number[] = [];
+
+	categories.forEach((category) => {
+		labels.push(category.name);
+		chartData.forEach((data) => {
+			if (data.categoryId === category.id)
+				datas.push(data._count.categoryId);
+		});
+		if (labels.length !== datas.length) datas.push(0);
+	});
+
+	const data = {
+		labels: labels,
+		datasets: [
+			{
+				data: datas,
+				hoverOffset: 4,
+			},
+		],
+	};
+
+	return (
+		<div className="w-1/2">
+			<Pie data={data} />
+		</div>
 	);
 };
 

@@ -115,6 +115,31 @@ export class TodosService {
 		if (_user.role !== 'ADMIN')
 			throw new UnauthorizedException('Insufficient Access');
 
+		const categoryWithCount = await this.prisma.todo.groupBy({
+			by: ['categoryId'],
+			_count: {
+				categoryId: true,
+			},
+			where: {
+				dueAt: {
+					gte: query.dateStart
+						? new Date(setDateStart(new Date(query.dateStart)))
+						: undefined,
+					lte: query.dateEnd
+						? new Date(setDateEnd(new Date(query.dateEnd)))
+						: undefined,
+				},
+				createdAt: {
+					gte: query.createdStart
+						? new Date(setDateStart(new Date(query.createdStart)))
+						: undefined,
+					lte: query.createdEnd
+						? new Date(setDateEnd(new Date(query.createdEnd)))
+						: undefined,
+				},
+			},
+		});
+
 		const count = await this.prisma.todo.count({
 			where: {
 				dueAt: {
@@ -136,6 +161,43 @@ export class TodosService {
 			},
 		});
 
-		return { count };
+		return { count, categoryWithCount };
+	}
+
+	async getCategoryStats(req: Request, query: FindTodoDto) {
+		const _user = req.user as ReqUser;
+		if (!_user) throw new BadRequestException(`No user found`);
+
+		if (_user.role !== 'ADMIN')
+			throw new UnauthorizedException('Insufficient Access');
+
+		const categoryWithCount = await this.prisma.todo.groupBy({
+			by: ['categoryId'],
+			_count: {
+				categoryId: true,
+			},
+			where: {
+				dueAt: {
+					gte: query.dateStart
+						? new Date(setDateStart(new Date(query.dateStart)))
+						: undefined,
+					lte: query.dateEnd
+						? new Date(setDateEnd(new Date(query.dateEnd)))
+						: undefined,
+				},
+				createdAt: {
+					gte: query.createdStart
+						? new Date(setDateStart(new Date(query.createdStart)))
+						: undefined,
+					lte: query.createdEnd
+						? new Date(setDateEnd(new Date(query.createdEnd)))
+						: undefined,
+				},
+			},
+		});
+
+		console.log(categoryWithCount);
+
+		return categoryWithCount;
 	}
 }

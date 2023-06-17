@@ -51,6 +51,13 @@ export class TodosController {
 		return this.todosService.getAdminStatistics(req, query);
 	}
 
+	@Get('/chart')
+	@UseGuards(JwtAuthGuard)
+	@ApiBearerAuth()
+	getCategoryStats(@Query() query: FindTodoDto, @Req() req: Request) {
+		return this.todosService.getCategoryStats(req, query);
+	}
+
 	@Get(':id')
 	@UseGuards(JwtAuthGuard)
 	@ApiBearerAuth()

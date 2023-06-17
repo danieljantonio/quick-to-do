@@ -15,7 +15,6 @@ const Navigation = () => {
 		queryKey: ['auth-admin'],
 		queryFn: authorizeAdmin,
 		refetchOnWindowFocus: false,
-		refetchOnReconnect: false,
 	});
 
 	return (
