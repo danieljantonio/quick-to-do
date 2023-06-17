@@ -1,10 +1,4 @@
-import {
-	ChartBar,
-	House,
-	ListChecks,
-	Newspaper,
-	PlusSquare,
-} from '@phosphor-icons/react';
+import { ChartBar, House, ListChecks, Newspaper, PlusSquare } from '@phosphor-icons/react';
 
 import Link from 'next/link';
 import { authorizeAdmin } from '~/api/router';
@@ -15,6 +9,7 @@ const Navigation = () => {
 		queryKey: ['auth-admin'],
 		queryFn: authorizeAdmin,
 		refetchOnWindowFocus: false,
+		refetchOnMount: false,
 	});
 
 	return (
