@@ -83,3 +83,6 @@ export const getAdminTodos = async (query?: TodoQuery) => {
 		config,
 	);
 };
+
+// add router for past 7 day stats (include today)
+// add router for next 7 day stats (starts from tomorrow)
