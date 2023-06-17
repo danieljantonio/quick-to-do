@@ -125,6 +125,14 @@ export class TodosService {
 						? new Date(setDateEnd(new Date(query.dateEnd)))
 						: undefined,
 				},
+				createdAt: {
+					gte: query.createdStart
+						? new Date(setDateStart(new Date(query.createdStart)))
+						: undefined,
+					lte: query.createdEnd
+						? new Date(setDateEnd(new Date(query.createdEnd)))
+						: undefined,
+				},
 			},
 		});
 

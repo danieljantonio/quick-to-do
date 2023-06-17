@@ -1,6 +1,7 @@
 import { Category, Todo } from '~/types';
 
 import axios from 'axios';
+import date from 'date-and-time';
 
 const user1Token =
 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbGl5OGJwc2cwMDA2dHlyZnBzenN3ZmN1IiwiaWF0IjoxNjg2OTM3MDUzLCJleHAiOjE2ODY5NTg2NTN9.oIeh22BKfPrCeIUkgATV_Hi5ztegSqrj-G51y1svBFY';
@@ -15,7 +16,7 @@ const config = {
 	},
 };
 
-export const getCategories = async () => {
+export const getCategories = () => {
 	return axios.get<Category[]>('http://localhost:5000/categories');
 };
 
@@ -26,14 +27,14 @@ export type TodoQuery = {
 	isDone?: '0' | '1';
 };
 
-export const getTodosToday = async () => {
+export const getTodosToday = () => {
 	return axios.get<Todo[]>(
 		`http://localhost:5000/todos?dateStart=${new Date().toISOString()}&dateEnd=${new Date().toISOString()}`,
 		config,
 	);
 };
 
-export const getTodos = async (query?: TodoQuery) => {
+export const getTodos = (query?: TodoQuery) => {
 	return axios.get<Todo[]>(
 		`http://localhost:5000/todos?${
 			query ? new URLSearchParams(query).toString() : ''
@@ -42,10 +43,7 @@ export const getTodos = async (query?: TodoQuery) => {
 	);
 };
 
-export const updateTodoStatus = async (data: {
-	id: string;
-	isDone: boolean;
-}) => {
+export const updateTodoStatus = (data: { id: string; isDone: boolean }) => {
 	return axios.patch<Todo>(
 		`http://localhost:5000/todos/${data.id}`,
 		{ isDone: data.isDone },
@@ -53,7 +51,7 @@ export const updateTodoStatus = async (data: {
 	);
 };
 
-export const postTodo = async (data: {
+export const postTodo = (data: {
 	description: string;
 	dueAt: string;
 	categoryId?: string;
@@ -61,21 +59,21 @@ export const postTodo = async (data: {
 	return axios.post<Todo>('http://localhost:5000/todos', data, config);
 };
 
-export const deleteTodo = async (id: string) => {
+export const deleteTodo = (id: string) => {
 	return axios.delete<{ removed: boolean }>(
 		`http://localhost:5000/todos/${id}`,
 		config,
 	);
 };
 
-export const authorizeAdmin = async () => {
+export const authorizeAdmin = () => {
 	return axios.get<{ authorized: boolean }>(
 		'http://localhost:5000/auth',
 		config,
 	);
 };
 
-export const getAdminTodos = async (query?: TodoQuery) => {
+export const getAdminTodos = (query?: TodoQuery) => {
 	return axios.get<Todo[]>(
 		`http://localhost:5000/todos/admin?${
 			query ? new URLSearchParams(query).toString() : ''
@@ -85,4 +83,27 @@ export const getAdminTodos = async (query?: TodoQuery) => {
 };
 
 // add router for past 7 day stats (include today)
+export const getPastWeekStats = () => {
+	const dateEnd = new Date();
+	dateEnd.setHours(23, 59, 59, 999);
+	const dateStart = date.addDays(dateEnd, -7);
+	dateStart.setHours(0, 0, 0, 0);
+
+	return axios.get<{ count: number }>(
+		`http://localhost:5000/todos/stats?createdStart=${dateStart.toISOString()}&createdEnd=${dateEnd.toISOString()}`,
+		config,
+	);
+};
+
 // add router for next 7 day stats (starts from tomorrow)
+export const getNextWeekStats = () => {
+	const dateStart = date.addDays(new Date(), 1);
+	dateStart.setHours(0, 0, 0, 0);
+	const dateEnd = date.addDays(dateStart, 7);
+	dateEnd.setHours(23, 59, 59, 999);
+
+	return axios.get<{ count: number }>(
+		`http://localhost:5000/todos/stats?dateStart=${dateStart.toISOString()}&dateEnd=${dateEnd.toISOString()}`,
+		config,
+	);
+};

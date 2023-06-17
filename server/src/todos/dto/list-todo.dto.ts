@@ -8,6 +8,12 @@ export class FindTodoDto {
 	dateEnd?: string;
 
 	@ApiProperty({ required: false })
+	createdStart?: string;
+
+	@ApiProperty({ required: false })
+	createdEnd?: string;
+
+	@ApiProperty({ required: false })
 	sortDesc?: string;
 
 	@ApiProperty({ required: false })
