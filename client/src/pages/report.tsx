@@ -80,14 +80,22 @@ const Report = () => {
 							</div>
 						</div>
 
-						{catData?.data ? (
-							<PieChart
-								categories={catData?.data.reverse() || []}
-								chartData={
-									pwData?.data.categoryWithCount.reverse() ||
-									[]
-								}
-							/>
+						{catData?.data && pwData?.data && nwData?.data ? (
+							isPastStats ? (
+								<PieChart
+									categories={catData?.data || []}
+									chartData={
+										pwData?.data.categoryWithCount || []
+									}
+								/>
+							) : (
+								<PieChart
+									categories={catData?.data || []}
+									chartData={
+										nwData?.data.categoryWithCount || []
+									}
+								/>
+							)
 						) : null}
 					</div>
 				)}
