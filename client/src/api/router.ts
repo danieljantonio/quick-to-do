@@ -21,6 +21,8 @@ const config = {
 export type TodoQuery = {
 	dateStart?: string;
 	dateEnd?: string;
+	createdStart?: string;
+	createdEnd?: string;
 	sortDesc?: '0' | '1';
 	isDone?: '0' | '1';
 };

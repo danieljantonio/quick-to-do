@@ -5,17 +5,21 @@ import date from 'date-and-time';
 import { TodoQuery, getTodos } from '~/api/router';
 import { Todo } from '~/types';
 import { useQuery } from 'react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Todos: NextPage = () => {
 	const today = new Date();
 	const [filters, setFilters] = useState<TodoQuery>({});
 
-	const { isLoading, data } = useQuery({
+	const { isLoading, data, refetch } = useQuery({
 		queryKey: ['todos'],
 		queryFn: () => getTodos(filters),
 		refetchOnWindowFocus: false,
 	});
+
+	useEffect(() => {
+		refetch();
+	}, [filters]);
 
 	const notDoneFirst = (data?: Todo[]) => {
 		if (!data) return [];
@@ -30,7 +34,37 @@ const Todos: NextPage = () => {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main className="flex flex-col items-center justify-center h-full">
-				<p className="w-3/5 text-3xl">All Tasks</p>
+				<div className="w-3/5 flex justify-between">
+					<p className="text-3xl w-fit">All Tasks</p>
+					<div className="flex gap-4">
+						<div className="form-control">
+							<span className="label-text">Start Date</span>
+							<input
+								onChange={(e) =>
+									setFilters({
+										...filters,
+										dateStart: e.target.value,
+									})
+								}
+								type="date"
+								className="input input-bordered input-sm"
+							/>
+						</div>
+						<div className="form-control">
+							<span className="label-text">End Date</span>
+							<input
+								onChange={(e) =>
+									setFilters({
+										...filters,
+										dateEnd: e.target.value,
+									})
+								}
+								type="date"
+								className="input input-bordered input-sm"
+							/>
+						</div>
+					</div>
+				</div>
 				{isLoading ? (
 					<span className="loading loading-bars loading-lg"></span>
 				) : (
